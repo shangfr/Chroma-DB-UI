@@ -30,7 +30,7 @@ if 'db' not in st.session_state:
 
         # load collections
         #path = st.text_input('Chroma DB Path', 'chroma')
-
+        st.session_state['path'] = path
         st.session_state['db'] = ChromaDB(path)
     else:
         st.stop()
