@@ -44,21 +44,25 @@ collections = db.get_collections()
 if not collections:
     st.info("Create a collection, first.")
     st.stop()
-
-collection_selected = st.radio("Select Collection To View",
-                               options=collections,
-                               index=0,
-                               horizontal=True
-                               )
+with st.sidebar:
+    collection_selected = st.radio("Select Collection To View",
+                                   options=collections,
+                                   index=0,
+                                   horizontal=True
+                                   )
+                                   
+    if st.button("Delete", type="primary"):
+        peeker.client.delete_collection(collection_selected)
+        st.rerun()
 
 df = db.get_collection_data(collection_selected, dataframe=True)
 size = df.shape[0]
 
 if size == 0:
-    st.info(f"集合{collection_selected}共有{size}个向量")
+    st.warning(f"👈 更换集合，当前集合{collection_selected}为空。")
     st.stop()
-
-st.info(f"集合{collection_selected}共有{size}个向量")
+    
+st.info(f"👈 更换集合，当前集合{collection_selected}共有{size}个向量。")
 
 edited_df = st.data_editor(df, column_config={
     "delete": st.column_config.CheckboxColumn(
