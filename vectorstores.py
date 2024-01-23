@@ -10,9 +10,8 @@ from langchain.document_loaders import UnstructuredFileLoader
 from langchain.document_loaders import AsyncHtmlLoader
 from langchain.document_transformers import Html2TextTransformer
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
-
+from langchain.embeddings import HuggingFaceEmbeddings,QianfanEmbeddingsEndpoint
 
 def parse_url(urls):
     loader = AsyncHtmlLoader(urls)
@@ -60,9 +59,11 @@ def doc_splits(file, chunk_size=1000, urls=[]):
     return splits
 
 
-def vectordb(file=None, splits=[], urls=[], chunk_size=1000, collection_name="test", persist_directory = "./chroma"):
-    
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+def vectordb(file=None, splits=[], urls=[], chunk_size=1000, collection_name="test", persist_directory = "./chroma",emb_fn_name="Default: all-MiniLM-L6-v2"):
+    if emb_fn_name=="Default: all-MiniLM-L6-v2":
+        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    else:
+        embeddings = QianfanEmbeddingsEndpoint(model="bge_large_zh", endpoint="bge_large_zh")
 
     splits = doc_splits(file, chunk_size, urls)
  

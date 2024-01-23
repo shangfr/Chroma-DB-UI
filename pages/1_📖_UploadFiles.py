@@ -49,7 +49,18 @@ if url:
 if urls==[] and uploaded_file is None:
     st.warning('没有可分析的文本。', icon="⚠️")
 else:
-    if st.button("入库", use_container_width=True): 
-        _ = vectordb(file=uploaded_file, urls=urls, chunk_size=chunk_size, collection_name = collection_name, persist_directory = path)  
+    cola, colb = st.columns([1,1])
+    emb_fn_name = cola.selectbox(
+        'Select Your Embedding Function?',
+        ('Default: all-MiniLM-L6-v2', '百度千帆'))
+
+    if emb_fn_name in ['百度千帆']:
+        import os
+        os.environ["QIANFAN_AK"] = colb.text_input("QIANFAN_AK", key="ak", type="password")
+        os.environ["QIANFAN_SK"] = colb.text_input("QIANFAN_SK", key="sk", type="password")
+        
+    st.caption(path)
+    if st.button("入库", type="primary", use_container_width=True): 
+        _ = vectordb(file=uploaded_file, urls=urls, chunk_size=chunk_size, collection_name = collection_name, persist_directory = path, emb_fn_name=emb_fn_name)  
 
         st.success("已导入Chroma DB。")

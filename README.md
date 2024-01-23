@@ -5,7 +5,7 @@ Add a simple UI for Chroma database with Streamlit.
 - [Streamlit](https://streamlit.io/) is an open-source app framework for Machine Learning and Data Science teams.
 
 
-```
+```bash
 安装教程
 git clone https://github.com/shangfr/Chroma-DB-UI.git
 使用说明
